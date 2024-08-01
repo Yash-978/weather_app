@@ -43,9 +43,16 @@ class WeatherProvider extends ChangeNotifier {
   // Future<void> getFavoriteWeather()
   // async {
   //   SharedPreferences sharedPreferences;
-  //   weather = await sharedPreferences.getStringList('weather',weather)??[];
+  //   weather = await sharedPreferences.getStringList('weather',weather)??<String>[];
   //
   // }
+  Future<void> getFavourite() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<String> weather =
+        sharedPreferences.getStringList('weather') ?? <String>[];
+    print(weather);
+    notifyListeners();
+  }
 
   Future<WeatherModel?> fromApi(String weatherInfo) async {
     final data = await apiHelper.fetchApiWeatherData(search);

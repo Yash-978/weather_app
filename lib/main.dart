@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
           create: (context) => WeatherProvider(),
         ),
       ],
-      builder: (context, child) => MaterialApp(initialRoute: '/weather',
+      builder: (context, child) => MaterialApp(
+        // initialRoute: '/',
         debugShowCheckedModeBanner: false,
         routes: {
           '/':(context)=>HomePage(),
