@@ -7,7 +7,9 @@ class WeatherApiHelper{
 
   Future<Map> fetchApiWeatherData(String search)
   async {
-    String api='https://api.weatherapi.com/v1/current.json?key=40550ce444b84c6c83625551243107&q=london';
+    // String api='https://api.weatherapi.com/v1/current.json?key=40550ce444b84c6c83625551243107&q=$search';
+    String api='https://api.weatherapi.com/v1/forecast.json?key=40550ce444b84c6c83625551243107&q=$search';
+    // String api='https://api.weatherapi.com/v1/forecast.json?key=40550ce444b84c6c83625551243107&q=surat';
     Uri url=Uri.parse(api);
     Response response = await http.get(url);
     if (response.statusCode==200){

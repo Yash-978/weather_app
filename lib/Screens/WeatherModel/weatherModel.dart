@@ -4,146 +4,314 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
-
-
 class WeatherModel {
-  late Location location;
-  late Current current;
+  late LocationModal locationModal;
+  late CurrentModal currentModal;
+  late ForecastModal forecastModal;
 
-  WeatherModel({required this.location, required this.current});
+  WeatherModel(this.locationModal, this.currentModal, this.forecastModal);
 
-  factory WeatherModel.fromJson(Map json) {
+  factory WeatherModel.fromJson(Map m1) {
     return WeatherModel(
-      location: Location.fromJson(json['location']),
-      current: Current.fromJson(json['current']),
-    );
+        LocationModal.fromJson(m1['location']),
+        CurrentModal.fromJson(m1['current']),
+        ForecastModal.fromJson(m1['forecast']));
   }
 }
 
-class Location {
-  late String name, region, country, tzId, localtime;
-  late double lat, lon;
-  late double localtimeEpoch;
+class LocationModal {
+  late String name, region, country, localtime;
 
-  Location({
-    required this.name,
-    required this.region,
-    required this.country,
-    required this.lat,
-    required this.lon,
-    required this.tzId,
-    required this.localtimeEpoch,
-    required this.localtime,
-  });
+  LocationModal(this.name, this.region, this.country, this.localtime);
 
-  factory Location.fromJson(Map m1) {
-    return Location(
-      name: m1['name'],
-      region: m1['region'],
-      country: m1['country'],
-      lat: m1['lat'],
-      lon: m1['lon'],
-      tzId: m1['tz_id'],
-      localtimeEpoch: m1['localtime_epoch'],
-      localtime: m1['localtime'],
-    );
+  factory LocationModal.fromJson(Map m1) {
+    return LocationModal(
+        m1['name'], m1['region'], m1['country'], m1['localtime']);
   }
 }
 
-class Current {
-  late double lastUpdatedEpoch, isDay, windDegree, humidity, cloud, uv;
-  late String lastUpdated, windDir;
-  late double tempC, tempF, windMph, windKph, pressureMb, pressureIn, precipMm,
-      precipIn, feelslikeC, feelslikeF, windchillC, windchillF, heatindexC,
-      heatindexF, dewpointC, dewpointF, visKm, visMiles, gustMph, gustKph;
+class CurrentModal {
+  late double temp_c, temp_f, wind_mph, wind_kph, pressure_in, pressure_mb, uv;
+  late int is_day, humidity, cloud;
   late Condition condition;
 
-  Current({
-    required this.lastUpdatedEpoch,
-    required this.lastUpdated,
-    required this.tempC,
-    required this.tempF,
-    required this.isDay,
-    required this.condition,
-    required this.windMph,
-    required this.windKph,
-    required this.windDegree,
-    required this.windDir,
-    required this.pressureMb,
-    required this.pressureIn,
-    required this.precipMm,
-    required this.precipIn,
-    required this.humidity,
-    required this.cloud,
-    required this.feelslikeC,
-    required this.feelslikeF,
-    required this.windchillC,
-    required this.windchillF,
-    required this.heatindexC,
-    required this.heatindexF,
-    required this.dewpointC,
-    required this.dewpointF,
-    required this.visKm,
-    required this.visMiles,
-    required this.uv,
-    required this.gustMph,
-    required this.gustKph,
-  });
+  CurrentModal(
+      this.temp_c,
+      this.temp_f,
+      this.wind_mph,
+      this.wind_kph,
+      this.pressure_in,
+      this.uv,
+      this.is_day,
+      this.humidity,
+      this.cloud,
+      this.pressure_mb,
+      this.condition);
 
-  factory Current.fromJson(Map m1) {
-    return Current(
-      lastUpdatedEpoch: m1['last_updated_epoch'],
-      lastUpdated: m1['last_updated'],
-      tempC: m1['temp_c'],
-      tempF: m1['temp_f'],
-      isDay: m1['is_day'],
-      condition: Condition.fromJson(m1['condition']),
-      windMph: m1['wind_mph'],
-      windKph: m1['wind_kph'],
-      windDegree: m1['wind_degree'],
-      windDir: m1['wind_dir'],
-      pressureMb: m1['pressure_mb'],
-      pressureIn: m1['pressure_in'],
-      precipMm: m1['precip_mm'],
-      precipIn: m1['precip_in'],
-      humidity: m1['humidity'],
-      cloud: m1['cloud'],
-      feelslikeC: m1['feelslike_c'],
-      feelslikeF: m1['feelslike_f'],
-      windchillC: m1['windchill_c'],
-      windchillF: m1['windchill_f'],
-      heatindexC: m1['heatindex_c'],
-      heatindexF: m1['heatindex_f'],
-      dewpointC: m1['dewpoint_c'],
-      dewpointF: m1['dewpoint_f'],
-      visKm: m1['vis_km'],
-      visMiles: m1['vis_miles'],
-      uv: m1['uv'],
-      gustMph: m1['gust_mph'],
-      gustKph: m1['gust_kph'],
-    );
+  factory CurrentModal.fromJson(Map m1) {
+    return CurrentModal(
+        m1['temp_c'].toDouble(),
+        m1['temp_f'].toDouble(),
+        m1['wind_mph'].toDouble(),
+        m1['wind_kph'].toDouble(),
+        m1['pressure_in'].toDouble(),
+        m1['uv'].toDouble(),
+        m1['is_day'],
+        m1['humidity'],
+        m1['cloud'],
+        m1['pressure_mb'].toDouble(),
+        Condition.fromJson(m1['condition']));
   }
 }
 
 class Condition {
   late String text, icon;
-  late double code;
 
-  Condition({
-    required this.text,
-    required this.icon,
-    required this.code,
-  });
+  Condition(this.text, this.icon);
 
   factory Condition.fromJson(Map m1) {
-    return Condition(
-      text: m1['text'],
-      icon: m1['icon'],
-      code: m1['code'],
+    return Condition(m1['text'], m1['icon']);
+  }
+}
+
+class ForecastModal {
+  late List<ForecastDay> forecastDay = [];
+
+  ForecastModal(this.forecastDay);
+
+  factory ForecastModal.fromJson(Map m1) {
+    return ForecastModal((m1['forecastday'] as List)
+            .map(
+              (e) => ForecastDay.fromJson(e),
+            )
+            .toList() ??
+        []);
+  }
+}
+
+class ForecastDay {
+  late String date;
+  late DayModal day;
+  late List<HourModal> hour = [];
+
+  ForecastDay(this.date, this.day, this.hour);
+
+  factory ForecastDay.fromJson(Map m1) {
+    return ForecastDay(
+        m1['date'],
+        DayModal.fromJson(m1['day']),
+        (m1['hour'] as List)
+            .map(
+              (e) => HourModal.fromJson(e),
+            )
+            .toList());
+  }
+}
+
+class DayModal {
+  late double maxtemp_c, mintemp_c;
+  late DayConditionModal dayConditionModal;
+
+  DayModal(this.maxtemp_c, this.mintemp_c, this.dayConditionModal);
+
+  factory DayModal.fromJson(Map m1) {
+    return DayModal(m1['maxtemp_c'].toDouble(), m1['mintemp_c'].toDouble(),
+        DayConditionModal.fromJson(m1['condition']));
+  }
+}
+
+class DayConditionModal {
+  late String text, icon;
+
+  DayConditionModal(this.text, this.icon);
+
+  factory DayConditionModal.fromJson(Map m1) {
+    return DayConditionModal(m1['text'], m1['icon']);
+  }
+}
+
+class HourModal {
+  late String time;
+  late double temp_c;
+  late int is_day;
+  late HourConditionModal hourConditionModal;
+
+  HourModal(this.time, this.temp_c, this.is_day, this.hourConditionModal);
+
+  factory HourModal.fromJson(Map m1) {
+    return HourModal(
+      m1['time'],
+      m1['temp_c'].toDouble(),
+      m1['is_day'],
+      HourConditionModal.fromJson(m1['condition']),
     );
   }
 }
 
+class HourConditionModal {
+  late String text, icon;
+
+  HourConditionModal(this.text, this.icon);
+
+  factory HourConditionModal.fromJson(Map m1) {
+    return HourConditionModal(m1['text'], m1['icon']);
+  }
+}
+
+// class WeatherModel {
+//   late Location location;
+//   late Current current;
+//
+//   WeatherModel({required this.location, required this.current});
+//
+//   factory WeatherModel.fromJson(Map json) {
+//     return WeatherModel(
+//       location: Location.fromJson(json['location']),
+//       current: Current.fromJson(json['current']),
+//     );
+//   }
+// }
+//
+// class Location {
+//   late String name, region, country, tzId, localtime;
+//   late double lat, lon;
+//   late double localtimeEpoch;
+//
+//   Location({
+//     required this.name,
+//     required this.region,
+//     required this.country,
+//     required this.lat,
+//     required this.lon,
+//     required this.tzId,
+//     required this.localtimeEpoch,
+//     required this.localtime,
+//   });
+//
+//   factory Location.fromJson(Map m1) {
+//     return Location(
+//       name: m1['name'],
+//       region: m1['region'],
+//       country: m1['country'],
+//       lat: m1['lat'],
+//       lon: m1['lon'],
+//       tzId: m1['tz_id'],
+//       localtimeEpoch: m1['localtime_epoch'],
+//       localtime: m1['localtime'],
+//     );
+//   }
+// }
+//
+// class Current {
+//   late double lastUpdatedEpoch, isDay, windDegree, humidity, cloud, uv;
+//   late String lastUpdated, windDir;
+//   late double tempC,
+//       tempF,
+//       windMph,
+//       windKph,
+//       pressureMb,
+//       pressureIn,
+//       precipMm,
+//       precipIn,
+//       feelslikeC,
+//       feelslikeF,
+//       windchillC,
+//       windchillF,
+//       heatindexC,
+//       heatindexF,
+//       dewpointC,
+//       dewpointF,
+//       visKm,
+//       visMiles,
+//       gustMph,
+//       gustKph;
+//   late Condition condition;
+//
+//   Current({
+//     required this.lastUpdatedEpoch,
+//     required this.lastUpdated,
+//     required this.tempC,
+//     required this.tempF,
+//     required this.isDay,
+//     required this.condition,
+//     required this.windMph,
+//     required this.windKph,
+//     required this.windDegree,
+//     required this.windDir,
+//     required this.pressureMb,
+//     required this.pressureIn,
+//     required this.precipMm,
+//     required this.precipIn,
+//     required this.humidity,
+//     required this.cloud,
+//     required this.feelslikeC,
+//     required this.feelslikeF,
+//     required this.windchillC,
+//     required this.windchillF,
+//     required this.heatindexC,
+//     required this.heatindexF,
+//     required this.dewpointC,
+//     required this.dewpointF,
+//     required this.visKm,
+//     required this.visMiles,
+//     required this.uv,
+//     required this.gustMph,
+//     required this.gustKph,
+//   });
+//
+//   factory Current.fromJson(Map m1) {
+//     return Current(
+//       lastUpdatedEpoch: m1['last_updated_epoch'],
+//       lastUpdated: m1['last_updated'],
+//       tempC: m1['temp_c'],
+//       tempF: m1['temp_f'],
+//       isDay: m1['is_day'],
+//       condition: Condition.fromJson(m1['condition']),
+//       windMph: m1['wind_mph'],
+//       windKph: m1['wind_kph'],
+//       windDegree: m1['wind_degree'],
+//       windDir: m1['wind_dir'],
+//       pressureMb: m1['pressure_mb'],
+//       pressureIn: m1['pressure_in'],
+//       precipMm: m1['precip_mm'],
+//       precipIn: m1['precip_in'],
+//       humidity: m1['humidity'],
+//       cloud: m1['cloud'],
+//       feelslikeC: m1['feelslike_c'],
+//       feelslikeF: m1['feelslike_f'],
+//       windchillC: m1['windchill_c'],
+//       windchillF: m1['windchill_f'],
+//       heatindexC: m1['heatindex_c'],
+//       heatindexF: m1['heatindex_f'],
+//       dewpointC: m1['dewpoint_c'],
+//       dewpointF: m1['dewpoint_f'],
+//       visKm: m1['vis_km'],
+//       visMiles: m1['vis_miles'],
+//       uv: m1['uv'],
+//       gustMph: m1['gust_mph'],
+//       gustKph: m1['gust_kph'],
+//     );
+//   }
+// }
+//
+// class Condition {
+//   late String text, icon;
+//   late double code;
+//
+//   Condition({
+//     required this.text,
+//     required this.icon,
+//     required this.code,
+//   });
+//
+//   factory Condition.fromJson(Map m1) {
+//     return Condition(
+//       text: m1['text'],
+//       icon: m1['icon'],
+//       code: m1['code'],
+//     );
+//   }
+// }
 
 //
 // class WeatherModel {
