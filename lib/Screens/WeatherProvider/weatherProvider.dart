@@ -11,7 +11,9 @@ class WeatherProvider extends ChangeNotifier {
   PageController _pageController = PageController();
   int selectPage = 0;
   List<String> weather = [];
+  List<WeatherModel> weatherList = [];
 
+  // String weather='';
   void searchWeather(String weatherInfo) {
     search = weatherInfo;
     notifyListeners();
@@ -31,32 +33,32 @@ class WeatherProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addToFavorite(String name, String status, double temp) async {
-    String favouriteWeatherCityData = '$name,$temp,$status';
-    SharedPreferences sharedPreferences1 =
-        await SharedPreferences.getInstance();
-    sharedPreferences1.setStringList('weather', weather);
-    weather.add(favouriteWeatherCityData);
-    sharedPreferences1.getStringList('weather');
-  }
-
-  // Future<void> getFavoriteWeather()
-  // async {
-  //   SharedPreferences sharedPreferences;
-  //   weather = await sharedPreferences.getStringList('weather',weather)??<String>[];
-  //
-  // }
-  Future<void> getFavourite() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    List<String> weather =
-        sharedPreferences.getStringList('weather') ?? <String>[];
-    print(weather);
-    notifyListeners();
-  }
-
   Future<WeatherModel?> fromApi(String weatherInfo) async {
     final data = await apiHelper.fetchApiWeatherData(search);
     weatherModel = WeatherModel.fromJson(data);
     return weatherModel;
+  }
+
+  Future<void> addFavCity(String name, String temp, String type) async {
+    String data = '$name-$temp-$type';
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    weather.add(data);
+    // weather.clear();
+    sharedPreferences.setStringList('weather', weather);
+    notifyListeners();
+  }
+
+  Future<void> getFavouriteWeather() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    weather = sharedPreferences.getStringList('weather') ?? <String>[];
+    notifyListeners();
+  }
+  void deleteFavoriteData(int index){
+    weatherList.removeAt(index);
+    notifyListeners();
+  }
+
+  WeatherProvider() {
+    getFavouriteWeather();
   }
 }

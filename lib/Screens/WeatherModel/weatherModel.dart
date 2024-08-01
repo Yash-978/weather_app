@@ -31,36 +31,51 @@ class LocationModal {
 }
 
 class CurrentModal {
-  late double temp_c, temp_f, wind_mph, wind_kph, pressure_in, pressure_mb, uv;
+  late double temp_c,
+      temp_f,
+      wind_mph,
+      wind_kph,
+      pressure_in,
+      pressure_mb,
+      uv,
+      feelslike_c,
+      vis_km;
   late int is_day, humidity, cloud;
   late Condition condition;
 
-  CurrentModal(
-      this.temp_c,
-      this.temp_f,
-      this.wind_mph,
-      this.wind_kph,
-      this.pressure_in,
-      this.uv,
-      this.is_day,
-      this.humidity,
-      this.cloud,
-      this.pressure_mb,
-      this.condition);
+  CurrentModal({
+    required this.temp_c,
+    required this.temp_f,
+    required this.wind_mph,
+    required this.wind_kph,
+    required this.pressure_in,
+    required this.uv,
+    required this.is_day,
+    required this.humidity,
+    required this.cloud,
+    required this.pressure_mb,
+    required this.condition,
+    required this.feelslike_c,
+    required this.vis_km,
+  });
 
   factory CurrentModal.fromJson(Map m1) {
     return CurrentModal(
-        m1['temp_c'].toDouble(),
-        m1['temp_f'].toDouble(),
-        m1['wind_mph'].toDouble(),
-        m1['wind_kph'].toDouble(),
-        m1['pressure_in'].toDouble(),
-        m1['uv'].toDouble(),
-        m1['is_day'],
-        m1['humidity'],
-        m1['cloud'],
-        m1['pressure_mb'].toDouble(),
-        Condition.fromJson(m1['condition']));
+      feelslike_c: m1['feelslike_c'].toDouble(),
+      vis_km: m1['vis_km'].toDouble(),
+      cloud: m1['cloud'],
+      condition: Condition.fromJson(m1['condition']),
+      humidity: m1['humidity'],
+      is_day: m1['is_day'],
+      pressure_in: m1['pressure_in'].toDouble(),
+      pressure_mb: m1['pressure_mb'].toDouble(),
+      temp_c: m1['temp_c'].toDouble(),
+      temp_f: m1['temp_f'].toDouble(),
+      wind_mph: m1['wind_mph'].toDouble(),
+      wind_kph: m1['wind_kph'].toDouble(),
+      uv: m1['uv'].toDouble(),
+      // m1['feelslike_c'].toDouble(),
+    );
   }
 }
 

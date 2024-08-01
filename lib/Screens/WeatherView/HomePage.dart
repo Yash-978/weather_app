@@ -1,6 +1,8 @@
+import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:weather_app/Screens/WeatherModel/weatherModel.dart';
 import 'package:weather_app/Screens/WeatherProvider/weatherProvider.dart';
 
@@ -21,7 +23,7 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         drawer: Drawer(
           // key: drawer.key,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.black12,
           child: Container(
             height: h * 1,
             width: w * 1,
@@ -36,7 +38,7 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       width: w * 0.65,
                       child: TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                         onFieldSubmitted: (value) {
                           weatherProviderFalse.searchWeather(value);
                         },
@@ -45,7 +47,7 @@ class HomePage extends StatelessWidget {
                         decoration: InputDecoration(
                           prefixIcon: IconButton(
                             onPressed: () {},
-                            icon: Icon(Icons.search, color: Colors.white),
+                            icon: const Icon(Icons.search, color: Colors.white),
                           ),
                           suffixIcon: GestureDetector(
                             onTap: () {
@@ -77,12 +79,15 @@ class HomePage extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.settings_outlined,
                         color: Colors.white,
                       ),
                     ),
                   ],
+                ),
+                SizedBox(
+                  height: h * 0.02,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -92,23 +97,20 @@ class HomePage extends StatelessWidget {
                           onPressed: () {
                             // weatherProviderFalse.addToFavorite(weatherProviderTrue.weatherModel!.locationModal.name,weatherProviderTrue.weatherModel!.currentModal.);
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.favorite,
                             color: Colors.white,
                           )),
-                      Text(
+                      const Text(
                         'My Favorite',
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 20,
                             fontWeight: FontWeight.w600,
                             color: Colors.white),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  width: w * 0.05,
-                )
               ],
             ),
           ).asGlass(blurX: 2, blurY: 2, tintColor: Colors.white),
@@ -117,594 +119,662 @@ class HomePage extends StatelessWidget {
           future: weatherProviderFalse.fromApi(weatherProviderFalse.search),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              WeatherModel? weather = snapshot.data;
               return Container(
                 height: h * 1,
                 width: w * 1,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/Gifs/weather1.gif'),
-                    )),
+                  fit: BoxFit.cover,
+                  image: AssetImage(
+                      (weatherProviderTrue.weatherModel!.currentModal.is_day ==
+                              1)
+                          ? night
+                          : day),
+                  // AssetImage('assets/Gifs/weather3.gif'),
+                )),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-
-                      Column(
-                        children: [
-                          Container(
-                            height: 950,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage((weatherProviderTrue
-                                              .weatherModel!.currentModal.is_day ==
-                                          1)
-                                      ? day
-                                      : night),
-                                  fit: BoxFit.fill),
-                              // color: Colors.red.shade200,
+                      Container(
+                        height: 990,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage((weatherProviderTrue
+                                          .weatherModel!.currentModal.is_day ==
+                                      1)
+                                  ? day
+                                  : night),
+                              fit: BoxFit.fill),
+                          // color: Colors.red.shade200,
+                        ),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                  onPressed: () {
+                                    // weatherProviderFalse.addFavCity(
+                                    //     weather!.locationModal.name,
+                                    //     weather.currentModal.temp_c.toString(),
+                                    //     weather.currentModal.condition.text);
+                                    Navigator.of(context)
+                                        .pushNamed('/favorite');
+                                  },
+                                  icon: const Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.white,
+                                  )),
                             ),
-                            child: Column(
-                              children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.favorite_border,color: Colors.white,)),
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                Text(
-                                  weatherProviderTrue
-                                      .weatherModel!.locationModal.name,
-                                  style: TextStyle(
-                                      color: (weatherProviderTrue.weatherModel!
-                                                  .currentModal.is_day ==
-                                              1)
-                                          ? Colors.black
-                                          : Colors.white,
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w400,
-                                      letterSpacing: 1.5,
-                                      height: 1),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Text(
+                              weatherProviderTrue
+                                  .weatherModel!.locationModal.name,
+                              style: TextStyle(
+                                  color: (weatherProviderTrue.weatherModel!
+                                              .currentModal.is_day ==
+                                          1)
+                                      ? Colors.white
+                                      : Colors.white,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 1.5,
+                                  height: 1),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    " ${weatherProviderTrue.weatherModel!.currentModal.temp_c}",
+                                    style: TextStyle(
+                                        color: (weatherProviderTrue
+                                                    .weatherModel!
+                                                    .currentModal
+                                                    .is_day ==
+                                                1)
+                                            ? Colors.white
+                                            : Colors.white,
+                                        fontSize: 100,
+                                        fontWeight: FontWeight.w200,
+                                        height: .8,
+                                        letterSpacing: -.5),
+                                  ),
+                                  Column(
                                     children: [
                                       Text(
-                                        " ${weatherProviderTrue.weatherModel!.currentModal.temp_c}",
+                                        '°C',
                                         style: TextStyle(
-                                            color: (weatherProviderTrue
-                                                        .weatherModel!
-                                                        .currentModal
-                                                        .is_day ==
-                                                    1)
-                                                ? Colors.black
-                                                : Colors.white,
-                                            fontSize: 100,
-                                            fontWeight: FontWeight.w200,
-                                            height: .8,
-                                            letterSpacing: -.5),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            '°C',
-                                            style: TextStyle(
-                                              color: (weatherProviderTrue
-                                                          .weatherModel!
-                                                          .currentModal
-                                                          .is_day ==
-                                                      1)
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                              fontSize: 55,
-                                              fontWeight: FontWeight.w300,
-                                              height: -.65,
-                                            ),
-                                          )
-                                        ],
+                                          color: (weatherProviderTrue
+                                                      .weatherModel!
+                                                      .currentModal
+                                                      .is_day ==
+                                                  1)
+                                              ? Colors.white
+                                              : Colors.white,
+                                          fontSize: 55,
+                                          fontWeight: FontWeight.w300,
+                                          height: -.65,
+                                        ),
                                       )
                                     ],
-                                  ),
-                                ),
-                                Text(
-                                  weatherProviderTrue
-                                      .weatherModel!.currentModal.condition.text,
-                                  style: TextStyle(
+                                  )
+                                ],
+                              ),
+                            ),
+                            Text(
+                              weatherProviderTrue
+                                  .weatherModel!.currentModal.condition.text,
+                              style: TextStyle(
+                                color: (weatherProviderTrue.weatherModel!
+                                            .currentModal.is_day ==
+                                        1)
+                                    ? Colors.white
+                                    : Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 70,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 180,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
                                     color: (weatherProviderTrue.weatherModel!
                                                 .currentModal.is_day ==
                                             1)
-                                        ? Colors.black
-                                        : Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 70,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 180,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        color: (weatherProviderTrue.weatherModel!
-                                                    .currentModal.is_day ==
-                                                1)
-                                            ? Colors.orange.shade100
-                                            : Colors.deepPurpleAccent.shade100,
-                                        borderRadius: BorderRadius.circular(20)),
-                                    child: Column(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 20, bottom: 10, top: 10),
-                                          child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              "Today's Forecast",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18),
-                                            ),
-                                          ),
+                                        ? Colors.black12
+                                        : Colors.black12,
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Column(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 20, bottom: 10, top: 10),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          "Today's Forecast",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
                                         ),
-                                        // SizedBox(height: 15,),
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            children: [
-                                              ...List.generate(
-                                                  weatherProviderTrue
-                                                      .weatherModel!
-                                                      .forecastModal
-                                                      .forecastDay
-                                                      .first
-                                                      .hour
-                                                      .length, (index) {
-                                                final hour = weatherProviderTrue
-                                                    .weatherModel!
-                                                    .forecastModal
-                                                    .forecastDay
-                                                    .first
-                                                    .hour[index];
-                                                return SizedBox(
-                                                    height: 120,
-                                                    width: 80,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.start,
-                                                      // crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          hour.time
-                                                              .split(" ")
-                                                              .sublist(1, 2)
-                                                              .join(" "),
-                                                          style: TextStyle(
-                                                              color: (weatherProviderTrue
-                                                                          .weatherModel!
-                                                                          .currentModal
-                                                                          .is_day ==
-                                                                      1)
-                                                                  ? Colors.black
-                                                                  : Colors.white,
-                                                              fontSize: 18),
-                                                        ),
-                                                        Image.network(
-                                                            'https:${hour.hourConditionModal.icon}'),
-                                                        Text(
-                                                          '${hour.temp_c}',
-                                                          style: TextStyle(
-                                                              color: (weatherProviderTrue
-                                                                          .weatherModel!
-                                                                          .currentModal
-                                                                          .is_day ==
-                                                                      1)
-                                                                  ? Colors.black
-                                                                  : Colors.white,
-                                                              fontSize: 18),
-                                                        ),
-                                                      ],
-                                                    ));
-                                              })
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                    // SizedBox(height: 15,),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          ...List.generate(
+                                              weatherProviderTrue
+                                                  .weatherModel!
+                                                  .forecastModal
+                                                  .forecastDay
+                                                  .first
+                                                  .hour
+                                                  .length, (index) {
+                                            final hour = weatherProviderTrue
+                                                .weatherModel!
+                                                .forecastModal
+                                                .forecastDay
+                                                .first
+                                                .hour[index];
+                                            return SizedBox(
+                                                height: 120,
+                                                width: 80,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  // crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height: 120,
+                                                      width: 70,
+                                                      // color: Colors.red,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                            hour.time
+                                                                .split(" ")
+                                                                .sublist(1, 2)
+                                                                .join(" "),
+                                                            style: TextStyle(
+                                                                color: (weatherProviderTrue
+                                                                            .weatherModel!
+                                                                            .currentModal
+                                                                            .is_day ==
+                                                                        1)
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .white,
+                                                                fontSize: 18),
+                                                          ),
+                                                          Image.network(
+                                                              'https:${hour.hourConditionModal.icon}'),
+                                                          Text(
+                                                            '${hour.temp_c}',
+                                                            style: TextStyle(
+                                                                color: (weatherProviderTrue
+                                                                            .weatherModel!
+                                                                            .currentModal
+                                                                            .is_day ==
+                                                                        1)
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .white,
+                                                                fontSize: 18),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ).asGlass(),
+                                                  ],
+                                                ));
+                                          })
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 22),
-                                  child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        'Weather Deatils',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      )),
+                              ).asGlass(),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 22),
+                              child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'Weather Details',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: (weatherProviderTrue
+                                                    .weatherModel!
+                                                    .currentModal
+                                                    .is_day ==
+                                                1)
+                                            ? Colors.black12
+                                            : Colors.black12,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'W wind',
+                                              style: TextStyle(
+                                                  color: (weatherProviderTrue
+                                                              .weatherModel!
+                                                              .currentModal
+                                                              .is_day ==
+                                                          1)
+                                                      ? Colors.white
+                                                      : Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                                '${weatherProviderTrue.weatherModel!.currentModal.wind_kph} km/h',
+                                                style: TextStyle(
+                                                    color: (weatherProviderTrue
+                                                                .weatherModel!
+                                                                .currentModal
+                                                                .is_day ==
+                                                            1)
+                                                        ? Colors.white
+                                                        : Colors.white,
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ),
+                                    ).asGlass(),
+                                    Container(
+                                      height: 120,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: (weatherProviderTrue
+                                                    .weatherModel!
+                                                    .currentModal
+                                                    .is_day ==
+                                                1)
+                                            ? Colors.black12
+                                            : Colors.black12,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Humidity',
+                                              style: TextStyle(
+                                                  color: (weatherProviderTrue
+                                                              .weatherModel!
+                                                              .currentModal
+                                                              .is_day ==
+                                                          1)
+                                                      ? Colors.white
+                                                      : Colors.white,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                                '${weatherProviderTrue.weatherModel!.currentModal.humidity} %',
+                                                style: TextStyle(
+                                                    color: (weatherProviderTrue
+                                                                .weatherModel!
+                                                                .currentModal
+                                                                .is_day ==
+                                                            1)
+                                                        ? Colors.white
+                                                        : Colors.white,
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ),
+                                    ).asGlass(blurY: 5, blurX: 5),
+                                  ],
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                Column(
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Container(
-                                          height: 120,
-                                          width: 180,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: (weatherProviderTrue
-                                                        .weatherModel!
-                                                        .currentModal
-                                                        .is_day ==
-                                                    1)
-                                                ? Colors.orange.shade100
-                                                : Colors.deepPurple.shade300,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'W wind',
-                                                  style: TextStyle(
-                                                      color: (weatherProviderTrue
-                                                                  .weatherModel!
-                                                                  .currentModal
-                                                                  .is_day ==
-                                                              1)
-                                                          ? Colors.black
-                                                          : Colors.black,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                    '${weatherProviderTrue.weatherModel!.currentModal.wind_kph} km/h',
-                                                    style: TextStyle(
-                                                        color: (weatherProviderTrue
-                                                                    .weatherModel!
-                                                                    .currentModal
-                                                                    .is_day ==
-                                                                1)
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                              ],
+                                    Container(
+                                      height: 120,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: (weatherProviderTrue
+                                                    .weatherModel!
+                                                    .currentModal
+                                                    .is_day ==
+                                                1)
+                                            ? Colors.black12
+                                            : Colors.black12,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Pressure ',
+                                              style: TextStyle(
+                                                  color: (weatherProviderTrue
+                                                              .weatherModel!
+                                                              .currentModal
+                                                              .is_day ==
+                                                          1)
+                                                      ? Colors.white
+                                                      : Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500),
                                             ),
-                                          ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                                '${weatherProviderTrue.weatherModel!.currentModal.pressure_mb} mb',
+                                                style: TextStyle(
+                                                    color: (weatherProviderTrue
+                                                                .weatherModel!
+                                                                .currentModal
+                                                                .is_day ==
+                                                            1)
+                                                        ? Colors.white
+                                                        : Colors.white,
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
                                         ),
-                                        Container(
-                                          height: 120,
-                                          width: 180,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: (weatherProviderTrue
-                                                        .weatherModel!
-                                                        .currentModal
-                                                        .is_day ==
-                                                    1)
-                                                ? Colors.orange.shade100
-                                                : Colors.deepPurple.shade300,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Humidity',
-                                                  style: TextStyle(
-                                                      color: (weatherProviderTrue
-                                                                  .weatherModel!
-                                                                  .currentModal
-                                                                  .is_day ==
-                                                              1)
-                                                          ? Colors.black
-                                                          : Colors.black,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                    '${weatherProviderTrue.weatherModel!.currentModal.humidity} %',
-                                                    style: TextStyle(
-                                                        color: (weatherProviderTrue
-                                                                    .weatherModel!
-                                                                    .currentModal
-                                                                    .is_day ==
-                                                                1)
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                              ],
+                                      ),
+                                    ).asGlass(),
+                                    Container(
+                                      height: 120,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: (weatherProviderTrue
+                                                    .weatherModel!
+                                                    .currentModal
+                                                    .is_day ==
+                                                1)
+                                            ? Colors.black12
+                                            : Colors.black12,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Visibility',
+                                              style: TextStyle(
+                                                  color: (weatherProviderTrue
+                                                              .weatherModel!
+                                                              .currentModal
+                                                              .is_day ==
+                                                          1)
+                                                      ? Colors.white
+                                                      : Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500),
                                             ),
-                                          ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                                '${weatherProviderTrue.weatherModel!.currentModal.vis_km} km',
+                                                style: TextStyle(
+                                                    color: (weatherProviderTrue
+                                                                .weatherModel!
+                                                                .currentModal
+                                                                .is_day ==
+                                                            1)
+                                                        ? Colors.white
+                                                        : Colors.white,
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Container(
-                                          height: 120,
-                                          width: 180,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: (weatherProviderTrue
-                                                        .weatherModel!
-                                                        .currentModal
-                                                        .is_day ==
-                                                    1)
-                                                ? Colors.orange.shade100
-                                                : Colors.deepPurple.shade300,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Pressure ',
-                                                  style: TextStyle(
-                                                      color: (weatherProviderTrue
-                                                                  .weatherModel!
-                                                                  .currentModal
-                                                                  .is_day ==
-                                                              1)
-                                                          ? Colors.black
-                                                          : Colors.black,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                    '${weatherProviderTrue.weatherModel!.currentModal.pressure_mb} mb',
-                                                    style: TextStyle(
-                                                        color: (weatherProviderTrue
-                                                                    .weatherModel!
-                                                                    .currentModal
-                                                                    .is_day ==
-                                                                1)
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 120,
-                                          width: 180,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: (weatherProviderTrue
-                                                        .weatherModel!
-                                                        .currentModal
-                                                        .is_day ==
-                                                    1)
-                                                ? Colors.orange.shade100
-                                                : Colors.deepPurple.shade300,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Visibility',
-                                                  style: TextStyle(
-                                                      color: (weatherProviderTrue
-                                                                  .weatherModel!
-                                                                  .currentModal
-                                                                  .is_day ==
-                                                              1)
-                                                          ? Colors.black
-                                                          : Colors.black,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                    // '${weatherProviderTrue.weatherModel!.currentModal.vis_km} km',
-                                                    '',
-                                                    style: TextStyle(
-                                                        color: (weatherProviderTrue
-                                                                    .weatherModel!
-                                                                    .currentModal
-                                                                    .is_day ==
-                                                                1)
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Container(
-                                          height: 120,
-                                          width: 180,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: (weatherProviderTrue
-                                                        .weatherModel!
-                                                        .currentModal
-                                                        .is_day ==
-                                                    1)
-                                                ? Colors.orange.shade100
-                                                : Colors.deepPurple.shade300,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Feels Like ',
-                                                  style: TextStyle(
-                                                      color: (weatherProviderTrue
-                                                                  .weatherModel!
-                                                                  .currentModal
-                                                                  .is_day ==
-                                                              1)
-                                                          ? Colors.black
-                                                          : Colors.black,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text('',
-                                                    // '${weatherProviderTrue.weatherModel!.currentModal.feelslike_c}°',
-                                                    style: TextStyle(
-                                                        color: (weatherProviderTrue
-                                                                    .weatherModel!
-                                                                    .currentModal
-                                                                    .is_day ==
-                                                                1)
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 120,
-                                          width: 180,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: (weatherProviderTrue
-                                                        .weatherModel!
-                                                        .currentModal
-                                                        .is_day ==
-                                                    1)
-                                                ? Colors.orange.shade100
-                                                : Colors.deepPurple.shade300,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Clouds  ',
-                                                  style: TextStyle(
-                                                      color: (weatherProviderTrue
-                                                                  .weatherModel!
-                                                                  .currentModal
-                                                                  .is_day ==
-                                                              1)
-                                                          ? Colors.black
-                                                          : Colors.black,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                    '${weatherProviderTrue.weatherModel!.currentModal.cloud}%',
-                                                    style: TextStyle(
-                                                        color: (weatherProviderTrue
-                                                                    .weatherModel!
-                                                                    .currentModal
-                                                                    .is_day ==
-                                                                1)
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ).asGlass(blurX: 2, blurY: 5),
                                   ],
-                                )
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: (weatherProviderTrue
+                                                    .weatherModel!
+                                                    .currentModal
+                                                    .is_day ==
+                                                1)
+                                            ? Colors.black12
+                                            : Colors.black12,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Feels Like ',
+                                              style: TextStyle(
+                                                  color: (weatherProviderTrue
+                                                              .weatherModel!
+                                                              .currentModal
+                                                              .is_day ==
+                                                          1)
+                                                      ? Colors.white
+                                                      : Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                                '${weatherProviderTrue.weatherModel!.currentModal.feelslike_c}°',
+                                                style: TextStyle(
+                                                    color: (weatherProviderTrue
+                                                                .weatherModel!
+                                                                .currentModal
+                                                                .is_day ==
+                                                            1)
+                                                        ? Colors.white
+                                                        : Colors.white,
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ),
+                                    ).asGlass(blurY: 1, blurX: 2),
+                                    Container(
+                                      height: 120,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: (weatherProviderTrue
+                                                    .weatherModel!
+                                                    .currentModal
+                                                    .is_day ==
+                                                1)
+                                            ? Colors.black12
+                                            : Colors.black12,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Clouds  ',
+                                              style: TextStyle(
+                                                  color: (weatherProviderTrue
+                                                              .weatherModel!
+                                                              .currentModal
+                                                              .is_day ==
+                                                          1)
+                                                      ? Colors.white
+                                                      : Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                                '${weatherProviderTrue.weatherModel!.currentModal.cloud}%',
+                                                style: TextStyle(
+                                                    color: (weatherProviderTrue
+                                                                .weatherModel!
+                                                                .currentModal
+                                                                .is_day ==
+                                                            1)
+                                                        ? Colors.white
+                                                        : Colors.white,
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ),
+                                    ).asGlass(blurX: 2, blurY: 2),
+                                  ],
+                                ),
                               ],
                             ),
-                          ),
-                        ],
+                            ActionSlider.standard(
+                              onTap: (controller, pos) {
+                                weatherProviderFalse.addFavCity(
+                                    weather!.locationModal.name,
+                                    weather.currentModal.temp_c.toString(),
+                                    weather.currentModal.condition.text);
+                              },
+                              sliderBehavior: SliderBehavior.stretch,
+                              rolling: true,
+                              width: w * 0.95,
+                              backgroundColor: Colors.white30,
+                              toggleColor: Colors.purpleAccent.shade200,
+                              iconAlignment: Alignment.centerRight,
+                              loadingIcon: const SizedBox(
+                                  width: 55,
+                                  child: Center(
+                                      child: SizedBox(
+                                    width: 24.0,
+                                    height: 24.0,
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 2.0, color: Colors.amber),
+                                  ))),
+                              successIcon: const SizedBox(
+                                  width: 55,
+                                  child:
+                                      Center(child: Icon(Icons.check_rounded))),
+                              icon: const SizedBox(
+                                  width: 55,
+                                  child: Center(
+                                      child: Icon(Icons.refresh_rounded))),
+                              action: (controller) async {
+                                controller.loading(); //starts loading animation
+                                await Future.delayed(const Duration(
+                                    seconds: 1, milliseconds: 500));
+                                controller.success(); //starts success animation
+                                await Future.delayed(
+                                    const Duration(seconds: 1));
+                                controller.reset(); //resets the slider
+                              },
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.black87,
+                                highlightColor: Colors.white,
+                                child: const Text(
+                                  'Slide To Add To Favorite',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 22),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
               );
             } else {
-              return Center(
-                child: CircularProgressIndicator(),
+              return Container(
+                height: h * 1,
+                width: w * 1,
+                decoration: const BoxDecoration(color: Colors.white),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.black87,
+                  highlightColor: Colors.white,
+                  child: Container(
+                    height: h * 0.95,
+                    width: w * 0.98,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(60)),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          textAlign: TextAlign.center,
+                          "Almost there! Let’s see if it’s a sunglasses or umbrella kind of day!",
+                          style: TextStyle(color: Colors.black, fontSize: 25),
+                        ),
+                      ],
+                    ),
+                  ).asGlass(),
+                ),
               );
             }
           },
         ),
-      
-        // FutureBuilder(
-        //   future: weatherProviderFalse.fromApi(weatherProviderFalse.search),
-        //   builder: (context, snapshot) {
-        //     WeatherModel? weatherData = snapshot.data;
-        //
-        //     if (snapshot.hasData) {
-        //       return ListView(
-        //         children: [
-        //           Container(
-        //             height: h * 0.5,
-        //             width: w * 0.5,
-        //             decoration: BoxDecoration(
-        //               color: Colors.red,
-        //             ),
-        //           ),
-        //           Text(weatherData!.locationModal.name),
-        //           Text(weatherData!.currentModal.condition.text),
-        //           Text(weatherData!.currentModal.temp_c.toString())
-        //         ],
-        //       );
-        //     } else if (snapshot.hasError) {
-        //       return Center(
-        //         child: Text(snapshot.error.toString()),
-        //       );
-        //     } else {
-        //       return Center(child: CircularProgressIndicator());
-        //     }
-        //   },
-        // ),
       ),
     );
   }
 }
 
-String day = '';
+String day = 'assets/Gifs/weather3.gif';
 String night = 'assets/Gifs/weather1.gif';
 // glassmorphism: ^3.0.0

@@ -4,6 +4,7 @@ import 'package:weather_app/Screens/WeatherProvider/weatherProvider.dart';
 
 import 'Screens/WeatherView/HomePage.dart';
 import 'Screens/WeatherView/WeatherScreen.dart';
+import 'Screens/WeatherView/splashScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,11 +22,12 @@ class MyApp extends StatelessWidget {
         ),
       ],
       builder: (context, child) => MaterialApp(
-        // initialRoute: '/',
+        initialRoute: '/splash',
         debugShowCheckedModeBanner: false,
         routes: {
-          '/':(context)=>HomePage(),
-          '/weather':(context)=>WeatherPage(),
+          '/': (context) => HomePage(),
+          '/splash': (context) => SplashPage(),
+          '/favorite': (context) => WeatherPage(),
         },
       ),
     );
