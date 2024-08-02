@@ -53,12 +53,31 @@ class WeatherProvider extends ChangeNotifier {
     weather = sharedPreferences.getStringList('weather') ?? <String>[];
     notifyListeners();
   }
-  void deleteFavoriteData(int index){
-    weatherList.removeAt(index);
+
+  // Future<void> delete(int index) async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   weatherList.removeAt(index);
+  //   sharedPreferences.setStringList('weather', weather);
+  //   notifyListeners();
+  //
+  //
+  // }
+  Future<void> delete(int index)
+  async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    weather.removeAt(index);
+    sharedPreferences.setStringList('weather', weather);
     notifyListeners();
   }
 
+
+  // void deleteFavoriteData(int index){
+  //   weatherList.removeAt(index);
+  //   notifyListeners();
+  // }
+
   WeatherProvider() {
     getFavouriteWeather();
+    // delete(index);
   }
 }

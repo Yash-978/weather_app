@@ -21,14 +21,15 @@ class WeatherPage extends StatelessWidget {
     WeatherProvider weatherProviderTrue =
         Provider.of<WeatherProvider>(context, listen: true);
     WeatherProvider weatherProviderFalse =
-        Provider.of<WeatherProvider>(context, listen: true);
+        Provider.of<WeatherProvider>(context, listen: false);
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(scrolledUnderElevation: 0.1,
+        appBar: AppBar(
+          scrolledUnderElevation: 0.1,
           centerTitle: true,
-          backgroundColor:Color(0xff87A0C9),
+          backgroundColor: Color(0xff87A0C9),
           title: Text(
             'Favorite Places',
             style: TextStyle(
@@ -55,24 +56,28 @@ class WeatherPage extends StatelessWidget {
                 color: Color(0xff87A0C9),
                 // color: Colors.cyan.shade50,
                 child: ListTile(
-                  // title: Text(weatherProviderTrue.weather[index].split('-').sublist(0,1).join('-'),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 24),),
-                  //  trailing : Text(weatherProviderTrue.weather[index].split('-').sublist(2,3).join('-'),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 21),),),
-                  title: Text('${name}',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24)),
-                  subtitle: Text('${status}',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 21)),
-                  trailing: Text('${temp}°C',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 38)),
-                ),
+                    leading: Text('${name}',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24)),
+                    // title: Text(weatherProviderTrue.weather[index].split('-').sublist(0,1).join('-'),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 24),),
+                    //  trailing : Text(weatherProviderTrue.weather[index].split('-').sublist(2,3).join('-'),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 21),),),
+                    title: Text('${temp}',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24)),
+                    subtitle: Text('${status}',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 21)),
+                    trailing:  IconButton(
+                        onPressed: () {
+                          weatherProviderFalse.delete(index);
+                        },
+                        icon: const Icon(Icons.delete,color: Colors.white,size: 35,)),),
               );
             },
           ),

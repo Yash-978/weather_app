@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
     WeatherProvider weatherProviderTrue =
         Provider.of<WeatherProvider>(context, listen: true);
     WeatherProvider weatherProviderFalse =
-        Provider.of<WeatherProvider>(context, listen: true);
+        Provider.of<WeatherProvider>(context, listen: false);
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -684,17 +684,19 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                             ActionSlider.standard(
+
                               onTap: (controller, pos) {
                                 weatherProviderFalse.addFavCity(
                                     weather!.locationModal.name,
                                     weather.currentModal.temp_c.toString(),
                                     weather.currentModal.condition.text);
+                                Navigator.of(context).pushNamed('/favorite');
                               },
                               sliderBehavior: SliderBehavior.stretch,
                               rolling: true,
                               width: w * 0.95,
                               backgroundColor: Colors.white30,
-                              toggleColor: Colors.purpleAccent.shade200,
+                              toggleColor: Colors.amber,
                               iconAlignment: Alignment.centerRight,
                               loadingIcon: const SizedBox(
                                   width: 55,
@@ -703,16 +705,17 @@ class HomePage extends StatelessWidget {
                                     width: 24.0,
                                     height: 24.0,
                                     child: CircularProgressIndicator(
-                                        strokeWidth: 2.0, color: Colors.amber),
+                                        strokeWidth: 2.0, color: Colors.white
+                                    ),
                                   ))),
                               successIcon: const SizedBox(
                                   width: 55,
                                   child:
-                                      Center(child: Icon(Icons.check_rounded))),
+                                      Center(child: Icon(Icons.check_rounded,color: Colors.white,))),
                               icon: const SizedBox(
                                   width: 55,
                                   child: Center(
-                                      child: Icon(Icons.refresh_rounded))),
+                                      child: Icon(Icons.refresh_rounded,color: Colors.white,))),
                               action: (controller) async {
                                 controller.loading(); //starts loading animation
                                 await Future.delayed(const Duration(
